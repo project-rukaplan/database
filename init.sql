@@ -33,6 +33,7 @@ CREATE TABLE "products" (
     "section_id" SMALLINT,
     "product_name" VARCHAR(500) NOT NULL,
     "product_description" TEXT,
+    "product__detailed_description" TEXT,
     "product_price" DECIMAL,
     FOREIGN KEY ("provider_id") REFERENCES "providers"("provider_id"),
     FOREIGN KEY ("product_type_id") REFERENCES "product_types"("product_type_id"),
@@ -78,75 +79,122 @@ CREATE TABLE "rating_values" (
     UNIQUE ("user_id", "provider_id", "product_id", "category_id")
 );
 
--- Insertar en la tabla users
-INSERT INTO "users" ("user_name", "user_last_name", "user_email")
-VALUES
-('Juan', 'Pérez', 'juan.perez@example.com'),
-('Ana', 'Gómez', 'ana.gomez@example.com'),
-('Carlos', 'Rodríguez', 'carlos.rodriguez@example.com');
+-- Insertar usuarios
+INSERT INTO users (user_name, user_last_name, user_email) VALUES
+('Daniel', 'Gaviria', 'daniel@example.com'),
+('Laura', 'Martinez', 'laura@example.com'),
+('Carlos', 'Ramirez', 'carlos@example.com');
 
--- Insertar en la tabla providers
-INSERT INTO "providers" ("provider_name", "provider_email")
-VALUES
-('Proveedor A', 'contacto@proveedora.com'),
-('Proveedor B', 'contacto@proveedorb.com'),
-('Proveedor C', 'contacto@proveedorc.com');
+-- Insertar proveedores
+INSERT INTO providers (provider_name, provider_email) VALUES
+('Proveedor A', 'proveedorA@example.com'),
+('Proveedor B', 'proveedorB@example.com');
 
--- Insertar en la tabla product_types
-INSERT INTO "product_types" ("product_type_name")
-VALUES
-('Tipo A'),
-('Tipo B'),
-('Tipo C');
+-- Insertar tipos de producto
+INSERT INTO product_types (product_type_name) VALUES
+('Electrónica'), ('Ferretería'), ('Oficina');
 
--- Insertar en la tabla product_sections
-INSERT INTO "product_sections" ("section_name")
-VALUES
-('Sección A'),
-('Sección B'),
-('Sección C');
+-- Insertar secciones de producto
+INSERT INTO product_sections (section_name) VALUES
+('Almacenamiento'), ('Herramientas'), ('Mobiliario');
 
--- Insertar en la tabla products
-INSERT INTO "products" ("provider_id", "product_type_id", "section_id", "product_name", "product_description", "product_price")
-VALUES
-(1, 1, 1, 'Producto A', 'Descripción del Producto A', 100.50),
-(1,1, 2, 'Producto A2', 'Descripción del Producto A2', 200.00),
-(2, 1, 3, 'Producto B', 'Descripción del Producto B', 150.75),
-(3, 2, 1, 'Producto C', 'Descripción del Producto C', 80.25),
-(1, 2, 1, 'Producto D', 'Descripción del Producto D', 120.00),
-(2, 3, 2, 'Producto E', 'Descripción del Producto E', 90.00),
-(3, 1, 3, 'Producto F', 'Descripción del Producto F', 60.50),
-(1, 2, 1, 'Producto G', 'Descripción del Producto G', 110.00),
-(2, 3, 2, 'Producto H', 'Descripción del Producto H', 95.25),
-(3, 1, 3, 'Producto I', 'Descripción del Producto I', 70.00),
-(1, 2, 1, 'Producto J', 'Descripción del Producto J', 130.00),
-(2, 2, 2, 'Producto B', 'Descripción del Producto B', 150.75),
-(3, 3, 3, 'Producto C', 'Descripción del Producto C', 80.25);
+-- Insertar productos
+INSERT INTO products (provider_id, product_type_id, section_id, product_name, product_description, product__detailed_description, product_price) VALUES
+(1, 1, 1, 'Disco Duro SSD', 'Almacenamiento rápido', 'SSD de 1TB con interfaz NVMe', 350.00),
+(1, 2, 2, 'Taladro Inalámbrico', 'Herramienta eléctrica', 'Taladro recargable con brocas incluidas', 120.00),
+(2, 3, 3, 'Silla Ergonómica', 'Silla de oficina', 'Silla con soporte lumbar y ajustable en altura', 210.00);
 
--- Insertar en la tabla projects
-INSERT INTO "projects" ("user_id", "project_name")
-VALUES
-(1, 'Proyecto 1'),
-(2, 'Proyecto 2'),
-(3, 'Proyecto 3');
+-- Insertar proyectos
+INSERT INTO projects (user_id, project_name) VALUES
+(1, 'Proyecto Alpha'),
+(2, 'Proyecto Beta');
 
--- Insertar en la tabla project_products
-INSERT INTO "project_products" ("project_id", "product_id", "project_product_quantity")
-VALUES
+-- Insertar productos en proyectos
+INSERT INTO project_products (project_id, product_id, project_product_quantity) VALUES
 (1, 1, 10),
-(2, 2, 5),
-(3, 3, 8);
+(1, 2, 5),
+(2, 3, 2);
 
--- Insertar en la tabla rating_categories
-INSERT INTO "rating_categories" ("category_name")
-VALUES
-('Calificación de Calidad'),
-('Calificación de Precio'),
-('Calificación de Entrega');
+-- Insertar categorías de calificación
+INSERT INTO rating_categories (category_name) VALUES
+('quality'), ('cost'), ('shipment');
 
--- Insertar en la tabla rating_values
-INSERT INTO "rating_values" ("user_id", "provider_id", "product_id", "category_id", "rating_value")
-VALUES
-(1, 1, 1, 1, 4),
-(2, 2, 2, 2, 5),
-(3, 3, 3, 3, 3);
+-- Insertar calificaciones
+INSERT INTO rating_values (user_id, provider_id, product_id, category_id, rating_value) VALUES
+(1, 1, 1, 1, 5),
+(1, 1, 1, 2, 4),
+(1, 1, 1, 3, 3),
+(2, 1, 2, 1, 4),
+(2, 1, 2, 2, 5),
+(2, 1, 2, 3, 4),
+(3, 2, 3, 1, 3),
+(3, 2, 3, 2, 4),
+(3, 2, 3, 3, 5);
+
+
+CREATE VIEW product_quality_rating_view AS
+SELECT
+    p.product_id,
+    p.product_name,
+    AVG(rv.rating_value) AS product_quality_rating
+FROM products p
+JOIN rating_values rv ON p.product_id = rv.product_id
+JOIN rating_categories rc ON rv.category_id = rc.category_id
+WHERE rc.category_name = 'quality'
+GROUP BY p.product_id, p.product_name;
+
+CREATE VIEW product_cost_rating_view AS
+SELECT
+    p.product_id,
+    p.product_name,
+    AVG(rv.rating_value) AS product_cost_rating
+FROM products p
+JOIN rating_values rv ON p.product_id = rv.product_id
+JOIN rating_categories rc ON rv.category_id = rc.category_id
+WHERE rc.category_name = 'cost'
+GROUP BY p.product_id, p.product_name;
+
+CREATE VIEW product_shipment_rating_view AS
+SELECT
+    p.product_id,
+    p.product_name,
+    AVG(rv.rating_value) AS product_shipment_rating
+FROM products p
+JOIN rating_values rv ON p.product_id = rv.product_id
+JOIN rating_categories rc ON rv.category_id = rc.category_id
+WHERE rc.category_name = 'shipment'
+GROUP BY p.product_id, p.product_name;
+
+CREATE OR REPLACE VIEW provider_quality_rating_view AS
+SELECT
+    pr.provider_id,
+    pr.provider_name,
+    AVG(rv.rating_value) AS provider_quality_rating
+FROM providers pr
+JOIN rating_values rv ON pr.provider_id = rv.provider_id
+JOIN rating_categories rc ON rv.category_id = rc.category_id
+WHERE rc.category_name = 'quality'
+GROUP BY pr.provider_id, pr.provider_name;
+
+CREATE OR REPLACE VIEW provider_cost_rating_view AS
+SELECT
+    pr.provider_id,
+    pr.provider_name,
+    AVG(rv.rating_value) AS provider_cost_rating
+FROM providers pr
+JOIN rating_values rv ON pr.provider_id = rv.provider_id
+JOIN rating_categories rc ON rv.category_id = rc.category_id
+WHERE rc.category_name = 'cost'
+GROUP BY pr.provider_id, pr.provider_name;
+
+CREATE OR REPLACE VIEW provider_shipment_rating_view AS
+SELECT
+    pr.provider_id,
+    pr.provider_name,
+    AVG(rv.rating_value) AS provider_shipment_rating
+FROM providers pr
+JOIN rating_values rv ON pr.provider_id = rv.provider_id
+JOIN rating_categories rc ON rv.category_id = rc.category_id
+WHERE rc.category_name = 'shipment'
+GROUP BY pr.provider_id, pr.provider_name;
+
