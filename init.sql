@@ -45,6 +45,7 @@ CREATE TABLE "projects" (
     "project_id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "user_id" INT,
     "project_name" VARCHAR(500) NOT NULL,
+    "project_description" TEXT,
     FOREIGN KEY ("user_id") REFERENCES "users"("user_id")
 );
 
@@ -105,9 +106,9 @@ INSERT INTO products (provider_id, product_type_id, section_id, product_name, pr
 (2, 3, 3, 'Silla Ergonómica', 'Silla de oficina', 'Silla con soporte lumbar y ajustable en altura', 210.00);
 
 -- Insertar proyectos
-INSERT INTO projects (user_id, project_name) VALUES
-(1, 'Proyecto Alpha'),
-(2, 'Proyecto Beta');
+INSERT INTO projects (user_id, project_name, project_description) VALUES
+(1, 'Proyecto Alpha', 'descripcion del proyecto alpha'),
+(2, 'Proyecto Beta', 'descripcion del proyecto beta');
 
 -- Insertar productos en proyectos
 INSERT INTO project_products (project_id, product_id, project_product_quantity) VALUES
