@@ -10,8 +10,8 @@ CREATE TABLE "users" (
 CREATE TABLE "providers" (
     "provider_id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "provider_name" VARCHAR(500) NOT NULL,
-    "provider_email" VARCHAR(500) NOT NULL
-    "provider_address" VARCHAR(500) NOT NULL,
+    "provider_email" VARCHAR(500) NOT NULL,
+    "provider_address" VARCHAR(500) NOT NULL
 );
 
 -- Tabla: product_types
@@ -90,7 +90,7 @@ INSERT INTO users (user_name, user_last_name, user_email) VALUES
 -- Insertar proveedores
 INSERT INTO providers (provider_name, provider_email, provider_address) VALUES
 ('Proveedor A', 'proveedorA@example.com', 'Calle 123, Ciudad A'),
-('Proveedor B', 'proveedorB@example.com', 'Calle 456, Ciudad B'),
+('Proveedor B', 'proveedorB@example.com', 'Calle 456, Ciudad B');
 
  
 -- Insertar tipos de producto
